@@ -4,7 +4,6 @@ var
   lightning = require('./lightning'),
   io = require('socket.io-client')
 ;
-
 function ready(e) {'use strict';
   e.currentTarget.removeEventListener(e.type, ready, false);
   var
