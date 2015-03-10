@@ -37,3 +37,5 @@ function lightning(
     context.lineTo(endX, endY);
   }
 }
+
+module.exports = lightning;
