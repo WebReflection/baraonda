@@ -18,4 +18,6 @@ app.listen(app.get('port'), function() {
   console.log("Node app is running at localhost:" + app.get('port'));
 });
 
+io.listen(8080);
+
 utils.handleConnection(io);
