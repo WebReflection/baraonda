@@ -1,8 +1,7 @@
 var
   animation = require('./animation'),
   jsStyle = require('./js-style'),
-  lightning = require('./lightning'),
-  io = require('socket.io-client')
+  lightning = require('./lightning')
 ;
 
 function ready(e) {'use strict';
