@@ -122,7 +122,7 @@ function terminateContribution(client) {'use strict';
 module.exports = {
   handleConnection: function (io) {'use strict';
     /*jshint eqnull:true */
-    io.on('connection', function (socket) {
+    io.on('connect', function (socket) {
       function geolocationStart(coords) {
         var client = clients[socket.id] || loopAndVerify(socket, coords);
         client.coords = coords;

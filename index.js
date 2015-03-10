@@ -1,23 +1,23 @@
 var express = require('express');
 var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
 var utils = require('./src/utils.js');
 
-app.set('port', (process.env.PORT || 5000));
+var PORT = process.env.PORT || 3000;
+var DYNO = process.env.DYNO || 'unnamed.dyno';
+
+server.listen(PORT, function(err) {
+  if (err) throw err;
+  console.log("Node app is running at localhost:" + PORT);
+});
 
 app.use('/js', express.static(__dirname + '/public/js'));
 app.use('/css', express.static(__dirname + '/public/css'));
 app.use('/img', express.static(__dirname + '/public/img'));
-
 app.get('/', function(request, response) {
   response.sendFile(__dirname + '/public/index.html');
 });
-
-http.listen(app.get('port'), function() {
-  console.log("Node app is running at localhost:" + app.get('port'));
-});
-
-io.listen(8080);
 
 utils.handleConnection(io);
