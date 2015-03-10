@@ -18,7 +18,6 @@ function lightning(
     progressX,
     progressY
   ;
-  console.log(startX, startY, endX, endY);
   while (rays--) {
     context.moveTo(progressX = startX, progressY = startY);
     do {
