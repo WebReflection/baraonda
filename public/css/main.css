@@ -1,0 +1,62 @@
+html, body {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: sans-serif;
+  text-align: center;
+  color: #DDD;
+  background-color: #333;
+}
+#hi-score {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  font-size: 32px;
+  color: #000;
+  opacity: .3;
+}
+#canvas {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+#score {
+  position: fixed;
+  overflow: hidden;
+  top: 25%;
+  left: 0;
+  right: 0;
+  bottom: 25%;
+  color: #000;
+  z-index: 1;
+  opacity: .3;
+}
+#details {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 32px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+  opacity: .3;
+}
+#accuracy {
+  position: fixed;
+  bottom: 8px;
+  left: 50%;
+  height: 8px;
+  background-color: #000;
+  opacity: .3;
+  width: 0px;
+}
+.circle {
+  z-index: 2;
+}

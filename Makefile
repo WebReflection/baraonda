@@ -5,13 +5,17 @@ LICENSE = "/*! (C) Andrea Giammarchi */"
 ### (C) Andrea Giammarchi - WTFPL License
 
 # default: lints the code and minifies it if everything is fine
-build:    
+build:
+	make -s css
 	make -s jshint
 	make -s minified
 
 # bundle: creates the browserified version of the project as js/bundle.max.js
 bundle:
 	sh utils/browserify.sh
+
+css:
+	cp src/css/*.css public/css
 
 # watch: update the browserified version of the project as soon as file changes
 watch:

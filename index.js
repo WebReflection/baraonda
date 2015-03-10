@@ -11,7 +11,7 @@ app.use('/css', express.static(__dirname + '/public/css'));
 app.use('/img', express.static(__dirname + '/public/img'));
 
 app.get('/', function(request, response) {
-  response.sendFile('public/index.html');
+  response.sendFile(__dirname + '/public/index.html');
 });
 
 app.listen(app.get('port'), function() {
