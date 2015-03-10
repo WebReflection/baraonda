@@ -17,7 +17,7 @@ program () {
 
 run () {
   local bin="$(program 'watchify' 'node_modules/watchify/bin/cmd.js')"
-  $bin src/main.js -o js/bundle.max.js -v
+  $bin src/main.js -o public/js/bundle.max.js -v
 }
 
 run

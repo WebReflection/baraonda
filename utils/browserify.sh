@@ -17,7 +17,7 @@ program () {
 
 run () {
   local bin="$(program 'browserify' 'node_modules/browserify/bin/cmd.js')"
-  $bin src/main.js -o js/bundle.max.js -d
+  $bin src/main.js -o public/js/bundle.max.js -d
 }
 
 run

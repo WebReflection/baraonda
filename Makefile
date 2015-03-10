@@ -1,6 +1,6 @@
 .PHONY: build bundle watch minified jshint size
 
-LICENSE = "/*! (C) Your Name - License */"
+LICENSE = "/*! (C) Andrea Giammarchi */"
 
 ### (C) Andrea Giammarchi - WTFPL License
 
@@ -31,8 +31,8 @@ jshint:
 size:
 	echo ""
 	echo "[  bytes  ] < bundle.max.js"
-	cat js/bundle.max.js | wc -c
+	cat public/js/bundle.max.js | wc -c
 	echo ""
 	echo "[  bytes  ] < bundle.js"
-	gzip -c js/bundle.js | wc -c
+	gzip -c public/js/bundle.js | wc -c
 	echo ""

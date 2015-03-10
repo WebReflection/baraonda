@@ -12,8 +12,8 @@ run () {
       bin="node_modules/uglify-js/bin/uglifyjs"
     fi
   fi
-  echo "$@" >js/bundle.js
-  $bin --verbose js/bundle.max.js >>js/bundle.js
+  echo "$@" >public/js/bundle.js
+  $bin --verbose public/js/bundle.max.js >>public/js/bundle.js
   
 }
 
