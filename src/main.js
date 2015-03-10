@@ -93,7 +93,7 @@ function ready(e) {'use strict';
       },
       geoOptions
     ),
-    socket = io(location.protocol + '//' + location.hostname + ':8080'),
+    socket = io('ws://' + location.hostname + ':8080'),
     stop = function (e) {
       e.preventDefault();
       e.stopPropagation();
