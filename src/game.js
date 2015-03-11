@@ -288,7 +288,6 @@ function ready() {'use strict';
   */
   window.addEventListener('resize', resize, false);
   window.addEventListener('orientationchange', resize, false);
-  window.addEventListener('deviceorientation', deviceorientation, false);
   documentElement.addEventListener('contextmenu', stop, true);
   documentElement.addEventListener('selectstart', stop, true);
   if (pointerEnabled || navigator.msPointerEnabled) {
@@ -428,8 +427,10 @@ function ready() {'use strict';
   });
   hiScore.textContent = localStorage.getItem('hi-score') || '';
 
-  // try to optimize for older browsers
-  if (!hasRAF) {
+  if (hasRAF) {
+    window.addEventListener('deviceorientation', deviceorientation, false);
+  } else {
+    // try to optimize for older browsers
     style.circle.replace({
       '.circle': {
         position: 'fixed',
