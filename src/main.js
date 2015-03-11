@@ -203,7 +203,7 @@ function ready(e) {'use strict';
   function saetta() {
     var
       half = canvas.width / 2,
-      hyp0 = Math.sqrt(
+      hypo = Math.sqrt(
         Math.pow(lastX - half, 2) +
         Math.pow(lastY, 2)
       ),
