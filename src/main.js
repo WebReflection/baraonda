@@ -201,14 +201,25 @@ function ready(e) {'use strict';
     animation.off(e.currentTarget, 'end', resetClass);
   }
   function saetta() {
+    var
+      half = canvas.width / 2,
+      hyp0 = Math.sqrt(
+        Math.pow(clientX - half, 2) +
+        Math.pow(clientY, 2)
+      ),
+      k2 = 50,
+      k1 = hypo - k2,
+      newX = (k1 * lastX + k2 * half) / (k1 + k2),
+      newY = (k1 * lastY) / (k1 + k2)
+    ;
     context.clearRect(0, 0, canvas.width, canvas.height);
     if (strikeTheSphere) {
       context.beginPath();
       if (0 < strikeTheSphere) {
         lightning(
           context,
-          canvas.width / 2, 0,
-          lastX, lastY - 50,
+          half, 0,
+          newX, newY,
           context.lineWidth = 2 * strikeTheSphere,
           10,
           3
@@ -216,8 +227,8 @@ function ready(e) {'use strict';
       } else {
         lightning(
           context,
-          lastX, lastY - 50,
-          canvas.width / 2, -10,
+          newX, newY,
+          half, -10,
           context.lineWidth = 10,
           20,
           5
