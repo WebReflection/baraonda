@@ -1,4 +1,9 @@
 html, body {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
   position: fixed;
   top: 0;
   right: 0;
@@ -6,12 +11,71 @@ html, body {
   left: 0;
   margin: 0;
   padding: 0;
-  overflow: hidden;
   font-family: sans-serif;
   text-align: center;
   color: #DDD;
   background-color: #333;
+  height: 100%;
 }
+#menu {
+  position: fixed;
+  z-index: 999;
+  opacity: .75;
+  background-color: #000;
+  height: 64px;
+  width: 100%;
+  text-align: center;
+}
+#menu ul, #menu li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline;
+}
+#menu a {
+  text-decoration: none;
+  color: #DDD;
+  border-bottom: 1px solid #000;
+  line-height: 63px;
+  display: inline-block;
+  padding: 0 8px;
+}
+#menu a:hover {
+  color: #FFF;
+  border-bottom: 1px solid #666;
+}
+#map {
+  background-color: #000;
+  height: 200px;
+  width: 100%;
+}
+
+@media all and (min-device-height : 480px) {
+  #map {
+    height: 320px;
+  }
+}
+
+@media all and (min-device-height : 580px) {
+  #map {
+    height: 480px;
+  }
+}
+
+#scoreboard {
+  max-width: 720px;
+  margin: 32px auto;
+}
+
+#scoreboard table {
+  width: 100%;
+}
+
+#scoreboard table th {
+  background: #666;
+}
+
+/* game */
 #hi-score {
   position: fixed;
   top: 16px;
