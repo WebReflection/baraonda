@@ -199,9 +199,9 @@ function ready() {'use strict';
     blueI = 0,
     backgroundPosition = 0,
     creator = false,
-    shouldFixBodyBackground = true,
     lastScore,
-    lastX, lastY
+    lastX, lastY,
+    lastGamma, lastBeta
   ;
   resetCanvas(body.offsetWidth, body.offsetHeight);
   function resetCanvas(width, height) {
@@ -262,19 +262,22 @@ function ready() {'use strict';
       rAF(saetta);
     }
   }
-  function deviceorientation(e) {
-    var
-      gamma = e.gamma,
-      beta = e.beta
-    ;
-    if (gamma && beta) {
-      if (shouldFixBodyBackground) {
-        shouldFixBodyBackground = false;
-        body.style.backgroundImage = 'url(/img/dark-sky.png)';
-      }
-      body.style.backgroundPosition =
-        (backgroundPosition - gamma) + 'px ' + (backgroundPosition - beta) + 'px';
+  function repositionBodyBackground() {
+    body.style.backgroundPosition =
+        (backgroundPosition - lastGamma) + 'px ' + (backgroundPosition - lastBeta) + 'px';
+  }
+  function verifyDeviceOrientation(e) {
+    var target = e.currentTarget;
+    target.removeEventListener(e.type, verifyDeviceOrientation, false);
+    if (e.gamma && e.beta) {
+      body.style.backgroundImage = 'url(/img/dark-sky.png)';
+      target.addEventListener(e.type, deviceorientation, false);
     }
+  }
+  function deviceorientation(e) {
+    lastGamma = e.gamma;
+    lastBeta = e.beta;
+    rAF(repositionBodyBackground);
   }
   /*
   function updateBackgroundPosition() {
@@ -425,7 +428,7 @@ function ready() {'use strict';
   hiScore.textContent = localStorage.getItem('hi-score') || '';
 
   if (hasRAF) {
-    window.addEventListener('deviceorientation', deviceorientation, false);
+    window.addEventListener('deviceorientation', verifyDeviceOrientation, false);
   } else {
     // try to optimize for older browsers
     style.circle.replace({
