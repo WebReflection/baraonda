@@ -3,7 +3,7 @@ var restyle = require('restyle');
 module.exports = function () {
   return {
     all: restyle({
-      '*': {
+      'html,body': {
         cursor: 'default',
         touchAction: 'none',
         userSelect: 'none'
@@ -76,7 +76,9 @@ module.exports = function () {
           iterationCount: '1',
           direction: 'normal'
         }
-      },
+      }
+    }),
+    animations: restyle({
       '@keyframes circle-growing': {
         '0%':   { borderWidth: 2, margin: { top: -51, left: -51 }, boxShadow: '0px 0px 0px 0px rgba(255,255,255,1)' },
         '100%': { borderWidth: 32, margin: { top: -80, left: -80 }, boxShadow: '0px 0px 32px 16px rgba(255,255,255,1)' }

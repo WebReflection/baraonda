@@ -10,43 +10,72 @@ function ready(e) {'use strict';
     circle,
     coords,
     engaged = false,
+    M = Math,
+    min = M.min,
+    round = M.round,
+    floor = M.floor,
+    sqrt = M.sqrt,
+    pow = M.pow,
     vibrate = "vibrate" in navigator ?
       function (howMuch) {
         navigator.vibrate(howMuch);
       } :
-      Object,
+      Number,
     hiScore = document.querySelector('#hi-score'),
     canvas = document.querySelector('#canvas'),
     context = canvas.getContext('2d'),
     details = document.querySelector('#details'),
     score = document.querySelector('#score'),
     style = jsStyle(),
-    circleDisappearingAnimationEnd = function (e) {
-      e.currentTarget.parentNode.removeChild(this);
-      animation.off(e.currentTarget, 'end', circleDisappearingAnimationEnd);
-    },
-    circleGrowedAnimationEnd = function (e) {
-      e.currentTarget.className = 'circle circle-showed glow';
-      animation.off(e.currentTarget, 'end', circleGrowedAnimationEnd);
-    },
-    circleShowingAnimationEnd = function (e) {
-      e.currentTarget.className = 'circle circle-showed glow';
-      animation.off(e.currentTarget, 'end', circleShowingAnimationEnd);
-    },
     documentElement = document.documentElement,
     pointerEnabled = navigator.pointerEnabled,
-    rAF = window.requestAnimationFrame       ||
-          window.webkitRequestAnimationFrame ||
-          window.mozRequestAnimationFrame ||
-          window.msRequestAnimationFrame ||
-          window.oRequestAnimationFrame    ||
-          function (callback) {
-            window.setTimeout(callback, 250);
-          },
+    requestAnimationFrame = window.requestAnimationFrame        ||
+                            window.webkitRequestAnimationFrame  ||
+                            window.mozRequestAnimationFrame     ||
+                            window.msRequestAnimationFrame      ||
+                            window.oRequestAnimationFrame,
+    hasRAF = !!requestAnimationFrame,
+    rAF = requestAnimationFrame || (function () {
+      var
+        // crappy browsers won't probably go any faster than this
+        speed = 1000 / 15,
+        callbacks = [],
+        invoke = function (callback) {
+          callbacks.splice(callbacks.indexOf(callback), 1);
+          callback();
+        }
+      ;
+      return function (callback) {
+        if (callbacks.indexOf(callback) < 0) {
+          callbacks.push(callback);
+          setTimeout(invoke, speed, callback);
+        }
+      };
+    }()),
+    commonCircleAnimationEndClass = 'circle circle-showed' + (hasRAF ? ' glow' : ''),
+    circleDisappearingAnimationEnd = function (e) {
+      var circle = e.currentTarget;
+      circle.parentNode.removeChild(circle);
+      animation.off(circle, 'end', circleDisappearingAnimationEnd);
+    },
+    circleGrowedAnimationEnd = function (e) {
+      var circle = e.currentTarget;
+      circle.className = commonCircleAnimationEndClass;
+      animation.off(circle, 'end', circleGrowedAnimationEnd);
+    },
+    circleShowingAnimationEnd = function (e) {
+      var circle = e.currentTarget;
+      circle.className = commonCircleAnimationEndClass;
+      animation.off(circle, 'end', circleShowingAnimationEnd);
+    },
     dropCircle = function (circle) {
       if (!circle) return;
-      animation.on(circle, 'end', circleDisappearingAnimationEnd, 250);
-      circle.className = 'circle circle-disappearing';
+      if (hasRAF) {
+        animation.on(circle, 'end', circleDisappearingAnimationEnd, 250);
+        circle.className = 'circle circle-disappearing';
+      } else {
+        circle.parentNode.removeChild(circle);
+      }
     },
     watchPosition = function (position) {
       if (!coords) {
@@ -59,13 +88,13 @@ function ready(e) {'use strict';
       }
       coords = position.coords;
       var
-        accuracy = Math.min(coords.accuracy, 150),
+        accuracy = min(coords.accuracy, 150),
         width = ((document.body.offsetWidth - 16) * accuracy) / 150
       ;
       style.accuracy.replace({
         '#accuracy': {
           width: width,
-          marginLeft: -Math.round(width / 2),
+          marginLeft: -round(width / 2),
           transition: 'all 3s'
         }
       });
@@ -106,8 +135,12 @@ function ready(e) {'use strict';
         'top:', clientY, 'px;',
         'left:', clientX, 'px;'
       );
-      animation.on(circle, 'end', circleShowingAnimationEnd, 250);
-      circle.className = 'circle circle-showing';
+      if (hasRAF) {
+        animation.on(circle, 'end', circleShowingAnimationEnd, 250);
+        circle.className = 'circle circle-showing';
+      } else {
+        circle.className = commonCircleAnimationEndClass;
+      }
     },
     touchstart = function (e) {
       // requestFullScreen();
@@ -137,6 +170,12 @@ function ready(e) {'use strict';
         });
       }
     },
+    batchedMove = function () {
+      if (circle) {
+        circle.style.left = lastX + 'px';
+        circle.style.top = lastY + 'px';
+      }
+    },
     touchmove = function (e) {
       var point;
       switch (stop(e).type) {
@@ -148,8 +187,9 @@ function ready(e) {'use strict';
           break;
       }
       if (circle) {
-        circle.style.top = (lastY = point.clientY) + 'px';
-        circle.style.left = (lastX = point.clientX) + 'px';
+        lastX = point.clientX;
+        lastY = point.clientY;
+        rAF(batchedMove);
       }
     },
     touchend = function (e) {
@@ -192,7 +232,7 @@ function ready(e) {'use strict';
     style.score.replace({
       '#score': {
         lineHeight: score.offsetHeight,
-        fontSize: Math.floor(score.offsetHeight / 1.5)
+        fontSize: floor(score.offsetHeight / 1.5)
       }
     });
   }
@@ -203,9 +243,9 @@ function ready(e) {'use strict';
   function saetta() {
     var
       half = canvas.width / 2,
-      hypo = Math.sqrt(
-        Math.pow(lastX - half, 2) +
-        Math.pow(lastY, 2)
+      hypo = sqrt(
+        pow(lastX - half, 2) +
+        (lastY * lastY)
       ),
       k2 = 50,
       k1 = hypo - k2,
@@ -388,6 +428,27 @@ function ready(e) {'use strict';
     details.className = 'red-highlight';
   });
   hiScore.textContent = localStorage.getItem('hi-score') || '';
+
+  // try to optimize for older browsers
+  if (!hasRAF) {
+    style.circle.replace({
+      '.circle': {
+        position: 'fixed',
+        margin: { top: 0, left: 0 },
+        width: 0,
+        height: 0,
+        background: '#DDD'
+      },
+      '.circle-showed': {
+        width: 100,
+        height: 100,
+        margin: {
+          top: -51,
+          left: -51
+        }
+      }
+    });
+  }
 }
 
 document.addEventListener(
