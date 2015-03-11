@@ -204,8 +204,8 @@ function ready(e) {'use strict';
     var
       half = canvas.width / 2,
       hyp0 = Math.sqrt(
-        Math.pow(clientX - half, 2) +
-        Math.pow(clientY, 2)
+        Math.pow(lastX - half, 2) +
+        Math.pow(lastY, 2)
       ),
       k2 = 50,
       k1 = hypo - k2,
