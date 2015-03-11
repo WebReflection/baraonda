@@ -292,10 +292,8 @@ function ready(e) {'use strict';
       }
       previously = many;
     }
-    if (!strikeTheSphere) {
-      vibrate(100);
-    }
     strikeTheSphere = -1;
+    vibrate(100);
     rAF(saetta);
   });
   socket.on('baraonda:finished', function (many) {
