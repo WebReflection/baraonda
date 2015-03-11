@@ -288,7 +288,7 @@ function ready(e) {'use strict';
       (backgroundPosition - e.gamma) + 'px ' + (backgroundPosition - e.beta) + 'px';
   }
   function updateBackgroundPosition() {
-    backgroundPosition++;
+    backgroundPosition += 0.1;
     document.body.style.backgroundPosition =
       (backgroundPosition) + 'px ' + (backgroundPosition) + 'px';
   }
