@@ -284,12 +284,14 @@ function ready(e) {'use strict';
     }
   }
   function deviceorientation(e) {
-    var style = body.style;
-    if (!style.backgroundImage) {
-      style.backgroundImage = 'url(/img/dark-sky.png)';
+    if (e.gamma && e.beta) {
+      var style = body.style;
+      if (!style.backgroundImage) {
+        style.backgroundImage = 'url(/img/dark-sky.png)';
+      }
+      style.backgroundPosition =
+        (backgroundPosition - e.gamma) + 'px ' + (backgroundPosition - e.beta) + 'px';
     }
-    style.backgroundPosition =
-      (backgroundPosition - e.gamma) + 'px ' + (backgroundPosition - e.beta) + 'px';
   }
   /*
   function updateBackgroundPosition() {
