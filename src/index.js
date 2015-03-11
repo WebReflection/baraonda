@@ -21,14 +21,21 @@ function ready(game) {'use strict';
   document.querySelector('#game').addEventListener('click', function (e) {
     e.preventDefault();
     e.stopPropagation();
-    document.body.innerHTML = ''.concat(
-      '<canvas id="canvas"></canvas>',
-      '<div id="hi-score"></div>',
-      '<div id="score"></div>',
-      '<div id="details"></div>',
-      '<div id="accuracy"></div>'
+    navigator.geolocation.getCurrentPosition(
+      function () {
+        document.body.innerHTML = ''.concat(
+          '<canvas id="canvas"></canvas>',
+          '<div id="hi-score"></div>',
+          '<div id="score"></div>',
+          '<div id="details"></div>',
+          '<div id="accuracy"></div>'
+        );
+        game();
+      },
+      function (e) {
+        alert('unable to retrieve your position: ' + e.message);
+      }
     );
-    game();
   }, false);
 
 }
