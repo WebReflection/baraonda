@@ -302,7 +302,7 @@ function ready(e) {'use strict';
     documentElement.addEventListener('mousemove', touchmove, true);
     documentElement.addEventListener('mouseup', touchend, true);
   }
-  details.textContent = 'collecting geolocation data';
+  details.textContent = 'collecting geo data';
   socket.on('baraonda:created', function (many) {
     creator = true;
     details.textContent = many ?
