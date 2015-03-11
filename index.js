@@ -16,6 +16,9 @@ server.listen(PORT, function(err) {
 app.use('/js', express.static(__dirname + '/public/js'));
 app.use('/css', express.static(__dirname + '/public/css'));
 app.use('/img', express.static(__dirname + '/public/img'));
+app.get('/favicon.ico', function(request, response) {
+  response.sendFile(__dirname + '/public/img/favicon.ico');
+});
 app.get('/', function(request, response) {
   response.sendFile(__dirname + '/public/index.html');
 });
