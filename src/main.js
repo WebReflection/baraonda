@@ -291,7 +291,6 @@ function ready(e) {'use strict';
     backgroundPosition++;
     document.body.style.backgroundPosition =
       (backgroundPosition) + 'px ' + (backgroundPosition) + 'px';
-    rAF(updateBackgroundPosition);
   }
   window.addEventListener('resize', resize, false);
   window.addEventListener('orientationchange', resize, false);
