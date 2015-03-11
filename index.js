@@ -25,6 +25,9 @@ app.get('/browserconfig.xml', function(request, response) {
 app.get('/manifest.json', function(request, response) {
   response.sendFile(__dirname + '/public/manifest.json');
 });
+app.get('/game/*', function(request, response) {
+  response.sendFile(__dirname + '/public/game.html');
+});
 app.get('/', function(request, response) {
   response.sendFile(__dirname + '/public/index.html');
 });

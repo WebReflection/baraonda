@@ -2,6 +2,7 @@ var
   animation = require('./animation'),
   jsStyle = require('./js-style'),
   lightning = require('./lightning'),
+  rAF = require('./raf'),
   io = require('socket.io-client')
 ;
 function ready(e) {'use strict';
@@ -30,29 +31,7 @@ function ready(e) {'use strict';
     style = jsStyle(),
     documentElement = document.documentElement,
     pointerEnabled = navigator.pointerEnabled,
-    requestAnimationFrame = window.requestAnimationFrame        ||
-                            window.webkitRequestAnimationFrame  ||
-                            window.mozRequestAnimationFrame     ||
-                            window.msRequestAnimationFrame      ||
-                            window.oRequestAnimationFrame,
-    hasRAF = !!requestAnimationFrame,
-    rAF = requestAnimationFrame || (function () {
-      var
-        // crappy browsers won't probably go any faster than this
-        speed = 1000 / 15,
-        callbacks = [],
-        invoke = function (callback) {
-          callbacks.splice(callbacks.indexOf(callback), 1);
-          callback();
-        }
-      ;
-      return function (callback) {
-        if (callbacks.indexOf(callback) < 0) {
-          callbacks.push(callback);
-          setTimeout(invoke, speed, callback);
-        }
-      };
-    }()),
+    hasRAF = !rAF.isFallback,
     commonCircleAnimationEndClass = 'circle circle-showed' + (hasRAF ? ' glow' : ''),
     circleDisappearingAnimationEnd = function (e) {
       var circle = e.currentTarget;
