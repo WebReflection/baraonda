@@ -435,7 +435,7 @@ function ready(e) {'use strict';
         margin: { top: 0, left: 0 },
         width: 0,
         height: 0,
-        background: '#DDD'
+        backgroundColor: '#DDD'
       },
       '.circle-showed': {
         width: 100,
