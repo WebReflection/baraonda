@@ -21,6 +21,7 @@ function ready(e) {'use strict';
         navigator.vibrate(howMuch);
       } :
       Number,
+    body = document.body,
     hiScore = document.querySelector('#hi-score'),
     canvas = document.querySelector('#canvas'),
     context = canvas.getContext('2d'),
@@ -89,7 +90,7 @@ function ready(e) {'use strict';
       coords = position.coords;
       var
         accuracy = min(coords.accuracy, 150),
-        width = ((document.body.offsetWidth - 16) * accuracy) / 150
+        width = ((body.offsetWidth - 16) * accuracy) / 150
       ;
       style.accuracy.replace({
         '#accuracy': {
@@ -129,7 +130,7 @@ function ready(e) {'use strict';
     },
     drawCircle = function (clientY, clientX) {
       dropCircle(circle);
-      circle = document.body.appendChild(document.createElement('circle'));
+      circle = body.appendChild(document.createElement('circle'));
       circle.className = 'circle';
       circle.style.cssText = ''.concat(
         'top:', clientY, 'px;',
@@ -223,13 +224,13 @@ function ready(e) {'use strict';
     lastScore,
     lastX, lastY
   ;
-  resetCanvas(document.body.offsetWidth, document.body.offsetHeight);
+  resetCanvas(body.offsetWidth, body.offsetHeight);
   function resetCanvas(width, height) {
     canvas.width = width;
     canvas.height = height;
   }
   function resize() {
-    resetCanvas(document.body.offsetWidth, document.body.offsetHeight);
+    resetCanvas(body.offsetWidth, body.offsetHeight);
     style.score.replace({
       '#score': {
         lineHeight: score.offsetHeight,
@@ -283,15 +284,20 @@ function ready(e) {'use strict';
     }
   }
   function deviceorientation(e) {
-    var acc = e.acceleration;
-    document.body.style.backgroundPosition =
+    var style = body.style;
+    if (!style.backgroundImage) {
+      style.backgroundImage = 'url(/img/dark-sky.png)';
+    }
+    style.backgroundPosition =
       (backgroundPosition - e.gamma) + 'px ' + (backgroundPosition - e.beta) + 'px';
   }
+  /*
   function updateBackgroundPosition() {
-    backgroundPosition += 0.1;
-    document.body.style.backgroundPosition =
+    backgroundPosition++;
+    body.style.backgroundPosition =
       (backgroundPosition) + 'px ' + (backgroundPosition) + 'px';
   }
+  */
   window.addEventListener('resize', resize, false);
   window.addEventListener('orientationchange', resize, false);
   window.addEventListener('deviceorientation', deviceorientation, false);
@@ -318,11 +324,11 @@ function ready(e) {'use strict';
     score.textContent = many || '';
     if (many !== previously) {
       vibrate(100);
-      animation.on(document.body, 'end', resetClass, 350);
+      animation.on(body, 'end', resetClass, 350);
       if (many > previously) {
-        document.body.className = 'blue';
+        body.className = 'blue';
       } else {
-        document.body.className = 'red';
+        body.className = 'red';
       }
       previously = many;
       strikeTheSphere = many;
@@ -343,8 +349,8 @@ function ready(e) {'use strict';
         animation.on(circle, 'end', circleGrowedAnimationEnd, 500);
         circle.className = 'circle circle-showed circle-growing';
       } else {
-        animation.on(document.body, 'end', resetClass, 350);
-        document.body.className = 'red';
+        animation.on(body, 'end', resetClass, 350);
+        body.className = 'red';
       }
       previously = many;
     }
@@ -361,8 +367,8 @@ function ready(e) {'use strict';
     strikeTheSphere = 0;
     animation.on(details, 'end', resetClass, 350);
     details.className = 'blue-highlight';
-    animation.on(document.body, 'end', resetClass, 350);
-    document.body.className = 'blue';
+    animation.on(body, 'end', resetClass, 350);
+    body.className = 'blue';
     animation.on(score, 'end', resetClass, 900);
     score.className = 'highlight';
     vibrate(250);
@@ -453,8 +459,6 @@ function ready(e) {'use strict';
         }
       }
     });
-  } else {
-    setInterval(updateBackgroundPosition, 250);
   }
 }
 

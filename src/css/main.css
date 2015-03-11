@@ -12,9 +12,6 @@ html, body {
   color: #DDD;
   background-color: #333;
 }
-body {
-  background-image: url(/img/dark-sky.png);
-}
 #hi-score {
   position: fixed;
   top: 16px;
