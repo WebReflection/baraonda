@@ -19,6 +19,12 @@ app.use('/img', express.static(__dirname + '/public/img'));
 app.get('/favicon.ico', function(request, response) {
   response.sendFile(__dirname + '/public/img/favicon.ico');
 });
+app.get('/browserconfig.xml', function(request, response) {
+  response.sendFile(__dirname + '/browserconfig.xml');
+});
+app.get('/manifest.json', function(request, response) {
+  response.sendFile(__dirname + '/public/manifest.json');
+});
 app.get('/', function(request, response) {
   response.sendFile(__dirname + '/public/index.html');
 });
