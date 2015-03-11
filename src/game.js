@@ -5,8 +5,7 @@ var
   rAF = require('./raf'),
   io = require('socket.io-client')
 ;
-function ready(e) {'use strict';
-  e.currentTarget.removeEventListener(e.type, ready, false);
+function ready() {'use strict';
   var
     circle,
     coords,
@@ -443,8 +442,4 @@ function ready(e) {'use strict';
   }
 }
 
-document.addEventListener(
-  'DOMContentLoaded',
-  ready,
-  false
-);
+module.exports = ready;

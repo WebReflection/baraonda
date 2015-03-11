@@ -54,7 +54,7 @@ html, body {
   background-color: #000;
   height: 200px;
   width: 100%;
-  border-bottom: 64px solid rgba(0,0,0,0.75);
+  border-bottom: 32px solid rgba(0,0,0,0.75);
 }
 
 @media all and (min-device-height : 480px) {
@@ -71,7 +71,7 @@ html, body {
 
 #scoreboard {
   max-width: 720px;
-  margin: 64px auto;
+  margin: 32px auto;
 }
 
 #scoreboard table {
