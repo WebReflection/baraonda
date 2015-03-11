@@ -262,10 +262,6 @@ function ready() {'use strict';
       rAF(saetta);
     }
   }
-  function changeBackgroundPosition() {
-    body.style.backgroundPosition =
-      (backgroundPosition - gamma) + 'px ' + (backgroundPosition - beta) + 'px';
-  }
   function deviceorientation(e) {
     var
       gamma = e.gamma,
@@ -276,7 +272,8 @@ function ready() {'use strict';
         shouldFixBodyBackground = false;
         body.style.backgroundImage = 'url(/img/dark-sky.png)';
       }
-      rAF(changeBackgroundPosition);
+      body.style.backgroundPosition =
+        (backgroundPosition - gamma) + 'px ' + (backgroundPosition - beta) + 'px';
     }
   }
   /*
