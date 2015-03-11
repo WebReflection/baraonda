@@ -218,6 +218,7 @@ function ready(e) {'use strict';
     previously = 0,
     strikeTheSphere = 0,
     blueI = 0,
+    backgroundPosition = 0,
     creator = false,
     lastScore,
     lastX, lastY
@@ -284,15 +285,14 @@ function ready(e) {'use strict';
   function deviceorientation(e) {
     var acc = e.acceleration;
     document.body.style.backgroundPosition =
-      (updateBackgroundPosition.i - e.gamma) + 'px ' + (updateBackgroundPosition.i - e.beta) + 'px';
+      (backgroundPosition - e.gamma) + 'px ' + (backgroundPosition - e.beta) + 'px';
   }
   function updateBackgroundPosition() {
-    updateBackgroundPosition.i++;
+    backgroundPosition++;
     document.body.style.backgroundPosition =
-      (updateBackgroundPosition.i) + 'px ' + (updateBackgroundPosition.i) + 'px';
+      (backgroundPosition) + 'px ' + (backgroundPosition) + 'px';
     rAF(updateBackgroundPosition);
   }
-  updateBackgroundPosition.i = 0;
   window.addEventListener('resize', resize, false);
   window.addEventListener('orientationchange', resize, false);
   window.addEventListener('deviceorientation', deviceorientation, false);
@@ -455,7 +455,7 @@ function ready(e) {'use strict';
       }
     });
   } else {
-    rAF(updateBackgroundPosition);
+    setInterval(updateBackgroundPosition, 250);
   }
 }
 
