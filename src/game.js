@@ -427,7 +427,7 @@ function ready() {'use strict';
   });
   hiScore.textContent = localStorage.getItem('hi-score') || '';
 
-  if (hasRAF) {
+  if (hasRAF || /\biP(?:ad|od|hone)\b/.test(navigator.userAgent)) {
     window.addEventListener('deviceorientation', verifyDeviceOrientation, false);
   } else {
     // try to optimize for older browsers
