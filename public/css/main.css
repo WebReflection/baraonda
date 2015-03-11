@@ -4,7 +4,7 @@ html, body {
   -ms-box-sizing: border-box;
   -o-box-sizing: border-box;
   box-sizing: border-box;
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
@@ -20,11 +20,17 @@ html, body {
 #menu {
   position: fixed;
   z-index: 999;
+}
+#menu, #footer {
   opacity: .75;
   background-color: #000;
   height: 64px;
   width: 100%;
   text-align: center;
+}
+#footer {
+  line-height: 64px;
+  color: #333;
 }
 #menu ul, #menu li {
   list-style: none;
@@ -48,6 +54,7 @@ html, body {
   background-color: #000;
   height: 200px;
   width: 100%;
+  border-bottom: 64px solid rgba(0,0,0,0.75);
 }
 
 @media all and (min-device-height : 480px) {
@@ -64,7 +71,7 @@ html, body {
 
 #scoreboard {
   max-width: 720px;
-  margin: 32px auto;
+  margin: 64px auto;
 }
 
 #scoreboard table {
