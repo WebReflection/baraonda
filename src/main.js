@@ -260,7 +260,7 @@ function ready(e) {'use strict';
           context,
           half, 0,
           newX, newY,
-          context.lineWidth = 2 * strikeTheSphere,
+          context.lineWidth = min(1000, 2 * strikeTheSphere),
           10,
           3
         );
@@ -274,8 +274,6 @@ function ready(e) {'use strict';
           5
         );
       }
-      // context.fillStyle = 'rgb(' + (blueI % 255) + ',' + (blueI % 255) + ',' + (100 + (blueI % 150)) + ')';
-      // if (++blueI < 0) blueI = 0;
       context.fillStyle = context.strokeStyle = 'rgb(221,221,221)';
       context.fill();
       context.stroke();
