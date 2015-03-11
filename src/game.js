@@ -31,7 +31,8 @@ function ready() {'use strict';
     documentElement = document.documentElement,
     pointerEnabled = navigator.pointerEnabled,
     hasRAF = !rAF.isFallback,
-    commonCircleAnimationEndClass = 'circle circle-showed' + (hasRAF ? ' glow' : ''),
+    goodEnough = hasRAF || /\biP(?:ad|od|hone)\b/.test(navigator.userAgent),
+    commonCircleAnimationEndClass = 'circle circle-showed' + (goodEnough ? ' glow' : ''),
     circleDisappearingAnimationEnd = function (e) {
       var circle = e.currentTarget;
       circle.parentNode.removeChild(circle);
@@ -49,7 +50,7 @@ function ready() {'use strict';
     },
     dropCircle = function (circle) {
       if (!circle) return;
-      if (hasRAF) {
+      if (goodEnough) {
         animation.on(circle, 'end', circleDisappearingAnimationEnd, 250);
         circle.className = 'circle circle-disappearing';
       } else {
@@ -114,7 +115,7 @@ function ready() {'use strict';
         'top:', clientY, 'px;',
         'left:', clientX, 'px;'
       );
-      if (hasRAF) {
+      if (goodEnough) {
         animation.on(circle, 'end', circleShowingAnimationEnd, 250);
         circle.className = 'circle circle-showing';
       } else {
@@ -427,9 +428,9 @@ function ready() {'use strict';
   });
   hiScore.textContent = localStorage.getItem('hi-score') || '';
 
-  if (hasRAF || /\biP(?:ad|od|hone)\b/.test(navigator.userAgent)) {
+  if (hasRAF) {
     window.addEventListener('deviceorientation', verifyDeviceOrientation, false);
-  } else {
+  } else if (!goodEnough) {
     // try to optimize for older browsers
     style.circle.replace({
       '.circle': {
