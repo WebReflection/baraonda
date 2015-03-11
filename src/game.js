@@ -199,6 +199,7 @@ function ready() {'use strict';
     blueI = 0,
     backgroundPosition = 0,
     creator = false,
+    shouldFixBodyBackground = true,
     lastScore,
     lastX, lastY
   ;
@@ -261,14 +262,21 @@ function ready() {'use strict';
       rAF(saetta);
     }
   }
+  function changeBackgroundPosition() {
+    body.style.backgroundPosition =
+      (backgroundPosition - gamma) + 'px ' + (backgroundPosition - beta) + 'px';
+  }
   function deviceorientation(e) {
-    if (e.gamma && e.beta) {
-      var style = body.style;
-      if (!style.backgroundImage) {
-        style.backgroundImage = 'url(/img/dark-sky.png)';
+    var
+      gamma = e.gamma,
+      beta = e.beta
+    ;
+    if (gamma && beta) {
+      if (shouldFixBodyBackground) {
+        shouldFixBodyBackground = false;
+        body.style.backgroundImage = 'url(/img/dark-sky.png)';
       }
-      style.backgroundPosition =
-        (backgroundPosition - e.gamma) + 'px ' + (backgroundPosition - e.beta) + 'px';
+      rAF(changeBackgroundPosition);
     }
   }
   /*
