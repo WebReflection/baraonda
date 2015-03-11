@@ -41,7 +41,7 @@ function ready(e) {'use strict';
           window.msRequestAnimationFrame ||
           window.oRequestAnimationFrame    ||
           function (callback) {
-            window.setTimeout(callback, 1000 / 25);
+            window.setTimeout(callback, 250);
           },
     dropCircle = function (circle) {
       if (!circle) return;
