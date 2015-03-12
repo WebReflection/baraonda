@@ -142,7 +142,7 @@ html, body {
   width: 0px;
 }
 #about {
-  padding: 72px 16px 16px 16px;
+  padding: 72px 16px 16px 0;
 }
 #about > img, #about > div {
   float: left;
