@@ -32,19 +32,22 @@ html, body {
   line-height: 64px;
   color: #333;
 }
+#menu > div {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0;
+}
+#menu ul {
+  width: 100%;
+}
 #menu ul, #menu li {
   display: inline-block;
   list-style: none;
   padding: 0;
-}
-#menu ul {
-  max-width: 720px;
-  width: 720px;
-  margin: auto;
+  margin: 0;
 }
 #menu li {
   width: 30%;
-  margin: 0;
 }
 #menu a {
   line-height: 63px;
