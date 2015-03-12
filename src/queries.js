@@ -3,7 +3,7 @@ module.exports = {
     'CREATE TABLE IF NOT EXISTS top_ten(',
       'id SERIAL,',
       'score INTEGER NOT NULL,',
-      'happened DATE NOT NULL,',
+      'happened TIMESTAMP WITHOUT TIME ZONE NOT NULL,',
       'latitude DOUBLE PRECISION,',
       'longitude DOUBLE PRECISION',
     ')'),
