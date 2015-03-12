@@ -62,7 +62,7 @@ function ready() {'use strict';
       if (goodEnough) {
         circle.className = 'circle circle-disappearing';
         style.circle.animate(circle, 'circle-disappearing', circleDisappearingAnimationEnd);
-        setTimeout(remove, 300);
+        setTimeout(remove, style.circle.getAnimationDuration(circle, 'circle-disappearing'));
       } else {
         remove();
       }
