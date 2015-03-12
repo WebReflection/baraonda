@@ -10,13 +10,11 @@ var
   io = require('socket.io')(server),
   utils = require('./src/utils.js'),
   queries = require('./src/queries.js'),
-  topTenTimer = 0,
   lastTopTenByScore,
   lastTopTenByDate
 ;
 
 function updateTopTen(done) {
-  topTenTimer = 0;
   db.query(queries.getTopTepByScore, function (err, result) {
     if(err) return console.error('error running query', err);
     lastTopTenByScore = JSON.stringify(result.rows);
@@ -60,18 +58,18 @@ db.connect(function(err) {
         response.sendFile(__dirname + '/public/game.html');
       });
       app.get('/live/*', function (request, response) {
-        if (topTenTimer) {
-          clearTimeout(topTenTimer);
-          topTenTimer = setTimeout(updateTopTen, 10000);
-        }
         switch(request.url) {
           case '/live/top-ten-score.json':
-            response.set('Content-Type', 'application/json');
-            response.send(lastTopTenByScore);
+            updateTopTen(function () {
+              response.set('Content-Type', 'application/json');
+              response.send(lastTopTenByScore);
+            });
             break;
           case '/live/top-ten-date.json':
-            response.set('Content-Type', 'application/json');
-            response.send(lastTopTenByDate);
+            updateTopTen(function () {
+              response.set('Content-Type', 'application/json');
+              response.send(lastTopTenByDate);
+            });
             break;
           default:
             response.status(404).send('Not found');
