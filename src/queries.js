@@ -8,6 +8,6 @@ module.exports = {
       'longitude DOUBLE PRECISION',
     ')'),
   saveResult: 'INSERT INTO top_ten(score, happened, latitude, longitude) VALUES($1, NOW(), $2, $3)',
-  getTopTepByDate: 'SELECT * FROM top_ten ORDER BY happened, score LIMIT 10',
-  getTopTepByScore: 'SELECT * FROM top_ten ORDER BY score, happened LIMIT 10'
+  getTopTepByDate: 'SELECT * FROM top_ten ORDER BY happened DESC, score DESC LIMIT 10',
+  getTopTepByScore: 'SELECT * FROM top_ten ORDER BY score DESC, happened DESC LIMIT 10'
 };
