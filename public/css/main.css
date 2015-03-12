@@ -33,22 +33,31 @@ html, body {
   color: #333;
 }
 #menu ul, #menu li {
+  display: inline-block;
   list-style: none;
   padding: 0;
+}
+#menu ul {
+  max-width: 720px;
+  width: 720px;
+  margin: auto;
+}
+#menu li {
+  width: 30%;
   margin: 0;
-  display: inline;
 }
 #menu a {
+  line-height: 63px;
+  width: 100%;
+  display: inline-block;
   text-decoration: none;
   color: #DDD;
   border-bottom: 1px solid #000;
-  line-height: 63px;
-  display: inline-block;
-  padding: 0 8px;
 }
 #menu a:hover {
   color: #FFF;
   border-bottom: 1px solid #666;
+  background-color: #333;
 }
 #map {
   background-color: #000;
@@ -57,7 +66,7 @@ html, body {
   border-bottom: 32px solid rgba(0,0,0,0.75);
 }
 
-@media all and (min-device-height : 480px) {
+@media all and (min-device-height : 500px) {
   #map {
     height: 320px;
   }
@@ -69,7 +78,7 @@ html, body {
   }
 }
 
-#scoreboard {
+#scoreboard, #about {
   max-width: 720px;
   margin: 32px auto;
 }
@@ -131,6 +140,20 @@ html, body {
   background-color: #000;
   opacity: .3;
   width: 0px;
+}
+#about {
+  padding: 72px 16px 16px 16px;
+}
+#about > img, #about > div {
+  float: left;
+}
+#about div {
+  text-align: left;
+  max-width: 328px;
+  margin-left: 16px;
+}
+#footer {
+  clear: left;
 }
 .circle {
   z-index: 2;
