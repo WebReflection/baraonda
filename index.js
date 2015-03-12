@@ -1,52 +1,94 @@
 var
   PORT = process.env.PORT || 3000,
   DYNO = process.env.DYNO || 'unnamed.dyno',
-  connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/baraonda'
+  DATABASE_URL = process.env.DATABASE_URL || 'postgres://localhost:5432/baraonda',
   pg = require('pg').native,
-  client = new pg.Client(connectionString),
+  db = new pg.Client(DATABASE_URL),
   express = require('express'),
   app = express(),
   server = require('http').Server(app),
   io = require('socket.io')(server),
-  utils = require('./src/utils.js')
+  utils = require('./src/utils.js'),
+  queries = require('./src/queries.js'),
+  topTenTimer = 0,
+  lastTopTenByScore,
+  lastTopTenByDate
 ;
 
-client.connect(function(err) {
+function updateTopTen(done) {
+  topTenTimer = 0;
+  db.query(queries.getTopTepByScore, function (err, result) {
+    if(err) return console.error('error running query', err);
+    lastTopTenByScore = JSON.stringify(result.rows);
+    db.query(queries.getTopTepByDate, function (err, result) {
+      if(err) return console.error('error running query', err);
+      lastTopTenByDate = JSON.stringify(result.rows);
+      if (typeof done === 'function') done();
+    });
+  });
+}
+
+function setupDatabase(done) {
+  db.query(queries.createTopTen, function (err, result) {
+    if(err) return console.error('error running query', err);
+    updateTopTen(done);
+  });
+}
+
+db.connect(function(err) {
   if(err) {
     return console.error('could not connect to postgres', err);
   }
-  client.query('SELECT NOW() AS "theTime"', function(err, result) {
-    if(err) {
-      return console.error('error running query', err);
-    }
+  db.query('SELECT NOW() AS "theTime"', function(err, result) {
+    if(err) return console.error('error running query', err);
     console.log(result.rows[0].theTime);
-    //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
-    client.end();
+    setupDatabase(function () {
+
+      app.use('/js', express.static(__dirname + '/public/js'));
+      app.use('/css', express.static(__dirname + '/public/css'));
+      app.use('/img', express.static(__dirname + '/public/img'));
+      app.get('/favicon.ico', function(request, response) {
+        response.sendFile(__dirname + '/public/img/favicon.ico');
+      });
+      app.get('/browserconfig.xml', function(request, response) {
+        response.sendFile(__dirname + '/browserconfig.xml');
+      });
+      app.get('/manifest.json', function(request, response) {
+        response.sendFile(__dirname + '/public/manifest.json');
+      });
+      app.get('/game/*', function(request, response) {
+        response.sendFile(__dirname + '/public/game.html');
+      });
+      app.get('/live/*', function (request, response) {
+        if (topTenTimer) {
+          clearTimeout(topTenTimer);
+          topTenTimer = setTimeout(updateTopTen, 10000);
+        }
+        switch(request.url) {
+          case '/live/top-ten-score.json':
+            response.set('Content-Type', 'application/json');
+            response.send(lastTopTenByScore);
+            break;
+          case '/live/top-ten-date.json':
+            response.set('Content-Type', 'application/json');
+            response.send(lastTopTenByDate);
+            break;
+          default:
+            response.status(404).send('Not found');
+            break;
+        }
+      });
+      app.get('/', function(request, response) {
+        response.sendFile(__dirname + '/public/index.html');
+      });
+
+      server.listen(PORT, function(err) {
+        if (err) return console.error('could not start the server', err);
+        console.log("Node app is running at port:" + PORT);
+        utils.handleConnection(io, db);
+      });
+
+    });
+
   });
 });
-
-server.listen(PORT, function(err) {
-  if (err) throw err;
-  console.log("Node app is running at localhost:" + PORT);
-});
-
-app.use('/js', express.static(__dirname + '/public/js'));
-app.use('/css', express.static(__dirname + '/public/css'));
-app.use('/img', express.static(__dirname + '/public/img'));
-app.get('/favicon.ico', function(request, response) {
-  response.sendFile(__dirname + '/public/img/favicon.ico');
-});
-app.get('/browserconfig.xml', function(request, response) {
-  response.sendFile(__dirname + '/browserconfig.xml');
-});
-app.get('/manifest.json', function(request, response) {
-  response.sendFile(__dirname + '/public/manifest.json');
-});
-app.get('/game/*', function(request, response) {
-  response.sendFile(__dirname + '/public/game.html');
-});
-app.get('/', function(request, response) {
-  response.sendFile(__dirname + '/public/index.html');
-});
-
-utils.handleConnection(io);

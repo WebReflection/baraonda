@@ -1,5 +1,6 @@
 var
   LOG = false,
+  queries = require('./queries'),
   clients = Object.create(null),
   distance = (function () {'use strict';
     var
@@ -120,7 +121,7 @@ function terminateContribution(client) {'use strict';
 
 
 module.exports = {
-  handleConnection: function (io) {'use strict';
+  handleConnection: function (io, db) {'use strict';
     /*jshint eqnull:true */
     io.on('connect', function (socket) {
       function geolocationStart(coords) {
@@ -144,11 +145,13 @@ module.exports = {
       function geolocationEnd(data) {
         var
           client = clients[socket.id],
-          followers
+          followers,
+          score
         ;
         if (client == null) return;
         delete clients[socket.id];
         followers = (client.parent || client).followers;
+        score = followers.length;
         if (LOG) {
           if (client.parent == null) {
             console.log('[TERMINATED] ' + client.socket.id);
@@ -157,11 +160,17 @@ module.exports = {
           }
         }
         if (client.parent == null) {
-          socket.emit('baraonda:terminated', followers.length);
-          followers.forEach(terminateContribution, followers.length + 1);
+          if (1 < score) {
+            db.query(
+              queries.saveResult,
+              [score, client.coords.latitude, client.coords.longitude]
+            );
+          }
+          socket.emit('baraonda:terminated', score);
+          followers.forEach(terminateContribution, score + 1);
         } else {
           followers.splice(followers.indexOf(client), 1);
-          client.socket.emit('baraonda:left', followers.length + 1);
+          client.socket.emit('baraonda:left', score);
           commonUpdate(client.parent);
         }
       }
