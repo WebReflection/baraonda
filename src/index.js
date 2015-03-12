@@ -1,5 +1,4 @@
 var
-  animation = require('./animation'),
   rAF = require('./raf'),
   L = require('leaflet')
 ;
