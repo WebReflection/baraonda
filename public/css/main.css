@@ -74,6 +74,10 @@ html, body {
   margin: 32px auto;
 }
 
+#scoreboard table td {
+  cursor: pointer;
+}
+
 #scoreboard table {
   width: 100%;
 }
