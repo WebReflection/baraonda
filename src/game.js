@@ -1,5 +1,4 @@
 var
-  animation = require('./animation'),
   gameStyle = require('./game-style'),
   lightning = require('./lightning'),
   rAF = require('./raf'),
@@ -34,27 +33,38 @@ function ready() {'use strict';
     goodEnough = hasRAF || /\biP(?:ad|od|hone)\b/.test(navigator.userAgent),
     commonCircleAnimationEndClass = 'circle circle-showed' + (goodEnough ? ' glow' : ''),
     circleDisappearingAnimationEnd = function (e) {
-      var circle = e.currentTarget;
+      var circle = stop(e).currentTarget;
       circle.parentNode.removeChild(circle);
-      animation.off(circle, 'end', circleDisappearingAnimationEnd);
     },
-    circleGrowedAnimationEnd = function (e) {
-      var circle = e.currentTarget;
+    circleCommonAnimationEnd = function (e) {
+      var circle = stop(e).currentTarget;
       circle.className = commonCircleAnimationEndClass;
-      animation.off(circle, 'end', circleGrowedAnimationEnd);
+      if (glowAfterDraw) {
+        glowAfterDraw = false;
+        circleNextAnimation();
+      }
     },
-    circleShowingAnimationEnd = function (e) {
-      var circle = e.currentTarget;
-      circle.className = commonCircleAnimationEndClass;
-      animation.off(circle, 'end', circleShowingAnimationEnd);
+    circleNextAnimation = function () {
+      if (circle && circle.className === commonCircleAnimationEndClass) {
+        circle.className = 'circle circle-showed circle-growing';
+        style.circle.animate(circle, 'circle-growing', circleCommonAnimationEnd);
+      } else {
+        glowAfterDraw = true;
+      }
     },
     dropCircle = function (circle) {
+      function remove() {
+        if (circle.parentNode) {
+          circle.parentNode.removeChild(circle);
+        }
+      }
       if (!circle) return;
       if (goodEnough) {
-        animation.on(circle, 'end', circleDisappearingAnimationEnd, 250);
         circle.className = 'circle circle-disappearing';
+        style.circle.animate(circle, 'circle-disappearing', circleDisappearingAnimationEnd);
+        setTimeout(remove, 300);
       } else {
-        circle.parentNode.removeChild(circle);
+        remove();
       }
     },
     watchPosition = function (position) {
@@ -116,8 +126,8 @@ function ready() {'use strict';
         'left:', clientX, 'px;'
       );
       if (goodEnough) {
-        animation.on(circle, 'end', circleShowingAnimationEnd, 250);
         circle.className = 'circle circle-showing';
+        style.circle.animate(circle, 'circle-showing', circleCommonAnimationEnd);
       } else {
         circle.className = commonCircleAnimationEndClass;
       }
@@ -200,6 +210,7 @@ function ready() {'use strict';
     blueI = 0,
     backgroundPosition = 0,
     creator = false,
+    glowAfterDraw = false,
     lastScore,
     lastX, lastY,
     lastGamma, lastBeta
@@ -220,7 +231,6 @@ function ready() {'use strict';
   }
   function resetClass(e) {
     e.currentTarget.className = '';
-    animation.off(e.currentTarget, 'end', resetClass);
   }
   function saetta() {
     var
@@ -236,30 +246,32 @@ function ready() {'use strict';
     ;
     context.clearRect(0, 0, canvas.width, canvas.height);
     if (strikeTheSphere) {
-      context.beginPath();
-      if (0 < strikeTheSphere) {
-        lightning(
-          context,
-          half, 0,
-          newX, newY,
-          context.lineWidth = min(1000, 2 * strikeTheSphere),
-          10,
-          3
-        );
-      } else {
-        lightning(
-          context,
-          newX, newY,
-          half, -10,
-          context.lineWidth = 10,
-          20,
-          5
-        );
+      if (!glowAfterDraw) {
+        context.beginPath();
+        if (0 < strikeTheSphere) {
+          lightning(
+            context,
+            half, 0,
+            newX, newY,
+            context.lineWidth = min(1000, 2 * strikeTheSphere),
+            10,
+            3
+          );
+        } else {
+          lightning(
+            context,
+            newX, newY,
+            half, -10,
+            context.lineWidth = 10,
+            20,
+            5
+          );
+        }
+        context.fillStyle = context.strokeStyle = 'rgb(221,221,221)';
+        context.fill();
+        context.stroke();
+        context.closePath();
       }
-      context.fillStyle = context.strokeStyle = 'rgb(221,221,221)';
-      context.fill();
-      context.stroke();
-      context.closePath();
       rAF(saetta);
     }
   }
@@ -312,12 +324,12 @@ function ready() {'use strict';
     score.textContent = many || '';
     if (many !== previously) {
       vibrate(100);
-      animation.on(body, 'end', resetClass, 350);
       if (many > previously) {
         body.className = 'blue';
       } else {
         body.className = 'red';
       }
+      style.animations.animate(body, body.className, resetClass);
       previously = many;
       strikeTheSphere = many;
       if (strikeTheSphere) {
@@ -331,14 +343,13 @@ function ready() {'use strict';
     if (many !== previously) {
       if (many > previously) {
         if (!previously) {
-          animation.on(details, 'end', resetClass, 350);
           details.className = 'blue-highlight';
+          style.animations.animate(details, details.className, resetClass);
         }
-        animation.on(circle, 'end', circleGrowedAnimationEnd, 500);
-        circle.className = 'circle circle-showed circle-growing';
+        circleNextAnimation();
       } else {
-        animation.on(body, 'end', resetClass, 350);
         body.className = 'red';
+        style.animations.animate(body, 'red', resetClass);
       }
       previously = many;
     }
@@ -353,12 +364,12 @@ function ready() {'use strict';
     dropCircle(circle);
     circle = null;
     strikeTheSphere = 0;
-    animation.on(details, 'end', resetClass, 350);
-    details.className = 'blue-highlight';
-    animation.on(body, 'end', resetClass, 350);
     body.className = 'blue';
-    animation.on(score, 'end', resetClass, 900);
     score.className = 'highlight';
+    details.className = 'blue-highlight';
+    style.animations.animate(body, 'blue', resetClass);
+    style.animations.animate(score, 'highlight', resetClass);
+    style.animations.animate(details, 'blue-highlight', resetClass);
     vibrate(250);
   });
   socket.on('baraonda:terminated', function (many) {
@@ -367,8 +378,8 @@ function ready() {'use strict';
     score.textContent = many;
     previously = 0;
     strikeTheSphere = 0;
-    animation.on(score, 'end', resetClass, 600);
     score.className = 'highlight';
+    style.animations.animate(score, 'highlight', resetClass);
     if (many) {
       lastScore = {
         latitude: coords.latitude,
@@ -382,8 +393,8 @@ function ready() {'use strict';
         localStorage.setItem('hi-score-details', JSON.stringify(lastScore));
         vibrate(500);
         hiScore.textContent = many;
-        animation.on(hiScore, 'end', resetClass, 900);
         hiScore.className = 'highlight';
+        style.animations.animate(hiScore, 'highlight', resetClass);
       } else {
         vibrate(100);
       }
@@ -394,28 +405,28 @@ function ready() {'use strict';
     score.textContent = many;
     previously = 0;
     strikeTheSphere = 0;
-    animation.on(details, 'end', resetClass, 350);
     details.className = 'red-highlight';
+    style.animations.animate(details, 'red-highlight', resetClass);
     vibrate(100);
   });
   socket.on('baraonda:somebody', function (waiting) {
     if (!previously && creator) {
       details.textContent = 'watch out';
-      animation.on(details, 'end', resetClass, 350);
       details.className = 'blue-highlight';
+      style.animations.animate(details, 'blue-highlight', resetClass);
     }
   });
   socket.on('baraonda:join', function (waiting) {
     if (waiting && !strikeTheSphere) {
       details.textContent = 'somebody is waiting';
-      animation.on(details, 'end', resetClass, 350);
       details.className = 'blue-highlight';
+      style.animations.animate(details, 'blue-highlight', resetClass);
     }
   });
   socket.on('connect', function(socket){
     details.textContent = coords ? 'ready' : 'locating';
-    animation.on(details, 'end', resetClass, 350);
     details.className = 'blue-highlight';
+    style.animations.animate(details, 'blue-highlight', resetClass);
     previously = 0;
   });
   socket.on('disconnect', function(socket){
@@ -423,8 +434,8 @@ function ready() {'use strict';
     score.textContent = '?';
     previously = 0;
     strikeTheSphere = 0;
-    animation.on(details, 'end', resetClass, 350);
     details.className = 'red-highlight';
+    style.animations.animate(details, 'red-highlight', resetClass);
   });
   hiScore.textContent = localStorage.getItem('hi-score') || '';
 
