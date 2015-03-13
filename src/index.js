@@ -115,7 +115,7 @@ function ready(game) {'use strict';
     markers.addTo(map);
   });
 
-  if (navigator.standalone) {
+  if (navigator.standalone || rAF.isFallback) {
       document.querySelector('#game').addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
