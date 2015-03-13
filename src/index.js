@@ -8,7 +8,7 @@ function rowToTableRow(row) {
   return {
     id: row.id,
     score: row.score,
-    when: when.toDateString() + ' ' + when.getHours() + ':' + when.getMinutes(),
+    when: when.toDateString().replace(when.getFullYear()) + ' ' + when.getHours() + ':' + when.getMinutes(),
     where: row.latitude.toFixed(3) + ', ' + row.longitude.toFixed(3)
   };
 }
