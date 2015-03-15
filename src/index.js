@@ -1,5 +1,6 @@
 var
   rAF = require('./raf'),
+  nominatim = require('./nominatim'),
   L = require('leaflet')
 ;
 
@@ -60,6 +61,9 @@ function showTable(which, map) {
             tbody.lastChild.addEventListener('click', showOnMap, false);
           } else {
             tbody.lastChild.appendChild(document.createElement('td')).textContent = row[key];
+            if (key === 'where') {
+              loadCityAndShowIt(rows[i], tbody.lastChild.lastChild);
+            }
           }
         }
       }
@@ -68,6 +72,12 @@ function showTable(which, map) {
     }
   };
   xhr.send(null);
+}
+
+function loadCityAndShowIt(info, where) {
+  nominatim([info.latitude, info.longitude], function (data) {
+    where.textContent = data.address.city;
+  });
 }
 
 function ready(game) {'use strict';
