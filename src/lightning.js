@@ -40,6 +40,7 @@ function lightning(
 
 try {
   lightning.sound = new Audio();
+  window.sound = lightning.sound;
   switch (true) {
     case /probably/.test(lightning.sound.canPlayType('audio/ogg; codecs="vorbis"')):
       lightning.sound.load('lightning.ogg');
