@@ -43,13 +43,13 @@ try {
   window.sound = lightning.sound;
   switch (true) {
     case /probably/.test(lightning.sound.canPlayType('audio/ogg; codecs="vorbis"')):
-      lightning.sound.load('lightning.ogg');
+      lightning.sound.load('/sound/lightning.ogg');
       break;
     case /probably|maybe/.test(lightning.sound.canPlayType('audio/mp3')):
-      lightning.sound.load('lightning.mp3');
+      lightning.sound.load('/sound/lightning.mp3');
       break;
     default:
-      lightning.sound.load('lightning.wav');
+      lightning.sound.load('/sound/lightning.wav');
       break;
   }
   document.documentElement.insertBefore(
