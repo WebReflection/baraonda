@@ -51,11 +51,6 @@ try {
       lightning.sound = new Audio('/sound/lightning.wav');
       break;
   }
-  window.sound = lightning.sound;
-  document.documentElement.insertBefore(
-    lightning.sound,
-    document.documentElement.lastChild
-  );
 } catch(e) {
   lightning.sound = {load: Object, pause: Object, play: Object};
 }
