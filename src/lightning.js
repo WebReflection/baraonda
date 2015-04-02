@@ -40,18 +40,18 @@ function lightning(
 
 try {
   lightning.sound = new Audio();
-  window.sound = lightning.sound;
   switch (true) {
     case /probably/.test(lightning.sound.canPlayType('audio/ogg; codecs="vorbis"')):
-      lightning.sound.load('/sound/lightning.ogg');
+      lightning.sound = new Audio('/sound/lightning.ogg');
       break;
     case /probably|maybe/.test(lightning.sound.canPlayType('audio/mp3')):
-      lightning.sound.load('/sound/lightning.mp3');
+      lightning.sound = new Audio('/sound/lightning.mp3');
       break;
     default:
-      lightning.sound.load('/sound/lightning.wav');
+      lightning.sound = new Audio('/sound/lightning.wav');
       break;
   }
+  window.sound = lightning.sound;
   document.documentElement.insertBefore(
     lightning.sound,
     document.documentElement.lastChild
