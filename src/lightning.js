@@ -38,4 +38,21 @@ function lightning(
   }
 }
 
+try {
+  lightning.sound = new Audio();
+  switch (true) {
+    case /probably/.test(lightning.sound.canPlayType('audio/ogg; codecs="vorbis"')):
+      lightning.sound.load('lightning.ogg');
+      break;
+    case /probably|maybe/.test(lightning.sound.canPlayType('audio/mp3')):
+      lightning.sound.load('lightning.mp3');
+      break;
+    default:
+      lightning.sound.load('lightning.wav');
+      break;
+  }
+} catch(e) {
+  lightning.sound = {load: Object, pause: Object, play: Object};
+}
+
 module.exports = lightning;

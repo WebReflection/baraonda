@@ -202,6 +202,7 @@ function ready() {'use strict';
           longitude: coords.longitude,
           accuracy: coords.accuracy
         });
+        lightning.sound.pause();
       }
     },
     devicePixelRatio = window.devicePixelRatio || 1,
@@ -356,6 +357,7 @@ function ready() {'use strict';
     strikeTheSphere = -1;
     vibrate(100);
     rAF(saetta);
+    lightning.sound.play();
   });
   socket.on('baraonda:finished', function (many) {
     details.textContent = 'mission completed';
@@ -371,6 +373,7 @@ function ready() {'use strict';
     style.animations.animate(score, 'highlight', resetClass);
     style.animations.animate(details, 'blue-highlight', resetClass);
     vibrate(250);
+    lightning.sound.pause();
   });
   socket.on('baraonda:terminated', function (many) {
     creator = false;
@@ -399,6 +402,7 @@ function ready() {'use strict';
         vibrate(100);
       }
     }
+    lightning.sound.pause();
   });
   socket.on('baraonda:left', function (many) {
     details.textContent = 'revoked';
