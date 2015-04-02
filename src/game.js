@@ -1,6 +1,7 @@
 var
   gameStyle = require('./game-style'),
   lightning = require('./lightning'),
+  sound = lightning.sound,
   rAF = require('./raf'),
   io = require('socket.io-client')
 ;
@@ -202,7 +203,7 @@ function ready() {'use strict';
           longitude: coords.longitude,
           accuracy: coords.accuracy
         });
-        lightning.sound.pause();
+        sound.pause();
       }
     },
     devicePixelRatio = window.devicePixelRatio || 1,
@@ -335,6 +336,7 @@ function ready() {'use strict';
       strikeTheSphere = many;
       if (strikeTheSphere) {
         rAF(saetta);
+        sound.play();
       }
     }
   });
@@ -357,7 +359,7 @@ function ready() {'use strict';
     strikeTheSphere = -1;
     vibrate(100);
     rAF(saetta);
-    lightning.sound.play();
+    sound.play();
   });
   socket.on('baraonda:finished', function (many) {
     details.textContent = 'mission completed';
@@ -373,7 +375,7 @@ function ready() {'use strict';
     style.animations.animate(score, 'highlight', resetClass);
     style.animations.animate(details, 'blue-highlight', resetClass);
     vibrate(250);
-    lightning.sound.pause();
+    sound.pause();
   });
   socket.on('baraonda:terminated', function (many) {
     creator = false;
@@ -402,7 +404,7 @@ function ready() {'use strict';
         vibrate(100);
       }
     }
-    lightning.sound.pause();
+    sound.pause();
   });
   socket.on('baraonda:left', function (many) {
     details.textContent = 'revoked';
