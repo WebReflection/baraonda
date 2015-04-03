@@ -51,6 +51,42 @@ try {
       lightning.sound = new Audio('/sound/lightning.wav');
       break;
   }
+
+  (function (sound) {
+
+    var
+      withoutTouchStart = true,
+      reset = function () {
+        sound.volume = 1;
+        sound.currentTime = 0;
+        sound.pause();
+      }
+    ;
+
+    function once(where, type, fn) {
+      var wrap = function (e) {
+        where.removeEventListener(type, wrap, true);
+        fn.call(this, e);
+      };
+      where.addEventListener(type, wrap, true);
+    }
+
+    once(sound, 'play', function () {
+      if (withoutTouchStart) reset();
+    });
+
+    once(sound, 'timeupdate', reset);
+
+    once(document, 'touchstart', function () {
+      withoutTouchStart = false;
+      sound.play();
+    });
+
+    sound.volume = 0.1;
+    sound.play();
+
+  }(lightning.sound));
+
 } catch(e) {
   lightning.sound = {load: Object, pause: Object, play: Object};
 }

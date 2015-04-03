@@ -2,9 +2,16 @@ var
   gameStyle = require('./game-style'),
   lightning = require('./lightning'),
   sound = lightning.sound,
+  resetSound = function () {
+    sound.currentTime = 0;
+    sound.pause();
+  },
   rAF = require('./raf'),
   io = require('socket.io-client')
 ;
+
+sound.addEventListener('ended', function () { sound.currentTime = 0; }, false);
+
 function ready() {'use strict';
   var
     circle,
@@ -203,7 +210,7 @@ function ready() {'use strict';
           longitude: coords.longitude,
           accuracy: coords.accuracy
         });
-        sound.pause();
+        resetSound();
       }
     },
     devicePixelRatio = window.devicePixelRatio || 1,
@@ -375,7 +382,7 @@ function ready() {'use strict';
     style.animations.animate(score, 'highlight', resetClass);
     style.animations.animate(details, 'blue-highlight', resetClass);
     vibrate(250);
-    sound.pause();
+    resetSound();
   });
   socket.on('baraonda:terminated', function (many) {
     creator = false;
@@ -404,7 +411,7 @@ function ready() {'use strict';
         vibrate(100);
       }
     }
-    sound.pause();
+    resetSound();
   });
   socket.on('baraonda:left', function (many) {
     details.textContent = 'revoked';
