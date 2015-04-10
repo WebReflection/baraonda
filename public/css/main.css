@@ -75,11 +75,13 @@ html, body {
   }
 }
 
+/*
 @media all and (min-device-height : 580px) {
   #map {
     height: 480px;
   }
 }
+*/
 
 #scoreboard, #about {
   max-width: 720px;

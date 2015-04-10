@@ -14,7 +14,17 @@ function rowToTableRow(row) {
   };
 }
 
+function panToOffset(latlng, offset, options) {
+  var x = this.latLngToContainerPoint(latlng).x - offset[0];
+  var y = this.latLngToContainerPoint(latlng).y - offset[1];
+  var point = this.containerPointToLatLng([x, y]);
+  return this.setView(point, this._zoom, { pan: options });
+}
+
 function showTable(which, map) {
+  if (!map.panToOffset) {
+    map.panToOffset = panToOffset;
+  }
   var
     showOnMap = function (e) {
       e.preventDefault();
@@ -26,7 +36,10 @@ function showTable(which, map) {
       ) {
         row = rows[i];
         if (row.id == id) {
-          return map.panTo(new L.LatLng(row.latitude, row.longitude));
+          return map.panToOffset(
+            new L.LatLng(row.latitude, row.longitude),
+            [0, document.querySelector('#menu').offsetHeight]
+          );
         }
       }
     },
