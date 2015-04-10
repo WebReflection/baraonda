@@ -52,12 +52,12 @@ try {
       break;
   }
 
-  (function (UA, sound) {
+  (function (UA, html, sound) {
 
     if (
       !/\bAndroid\b/.test(UA) ||
-      sound.setPointerCapture ||
-      sound.msSetPointerCapture
+      html.setPointerCapture ||
+      html.msSetPointerCapture
     ) return;
 
     var
@@ -91,7 +91,7 @@ try {
     sound.volume = 0.1;
     sound.play();
 
-  }(navigator.userAgent, lightning.sound));
+  }(navigator.userAgent, document.documentElement, lightning.sound));
 
 } catch(e) {
   lightning.sound = {load: Object, pause: Object, play: Object};
