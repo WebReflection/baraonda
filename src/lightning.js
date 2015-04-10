@@ -77,14 +77,10 @@ try {
       where.addEventListener(type, wrap, true);
     }
 
-    once(sound, 'play', function () {
-      if (withoutTouchStart) reset();
-    });
-
+    // once(sound, 'play', reset);
     once(sound, 'timeupdate', reset);
 
     once(document, 'touchstart', function () {
-      withoutTouchStart = false;
       sound.play();
     });
 
