@@ -52,7 +52,13 @@ try {
       break;
   }
 
-  (function (sound) {
+  (function (UA, sound) {
+
+    if (
+      !/\bAndroid\b/.test(UA) ||
+      sound.setPointerCapture ||
+      sound.msSetPointerCapture
+    ) return;
 
     var
       withoutTouchStart = true,
@@ -85,7 +91,7 @@ try {
     sound.volume = 0.1;
     sound.play();
 
-  }(lightning.sound));
+  }(navigator.userAgent, lightning.sound));
 
 } catch(e) {
   lightning.sound = {load: Object, pause: Object, play: Object};

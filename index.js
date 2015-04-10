@@ -78,6 +78,9 @@ db.connect(function(err) {
             break;
         }
       });
+      app.get('/game', function(request, response) {
+        response.redirect('/game/');
+      });
       app.get('/', function(request, response) {
         response.sendFile(__dirname + '/public/index.html');
       });
