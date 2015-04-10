@@ -54,6 +54,12 @@ try {
 
   (function (UA, html, sound) {
 
+    alert([
+      !/\bAndroid\b/.test(UA),
+      html.setPointerCapture,
+      html.msSetPointerCapture
+    ]);
+
     if (
       !/\bAndroid\b/.test(UA) ||
       html.setPointerCapture ||
